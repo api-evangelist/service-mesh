@@ -1,0 +1,154 @@
+{
+  "title": "Service Mesh Traffic Policy Structure",
+  "description": "Structural documentation for common traffic policy primitives used across service mesh implementations",
+  "version": "1.0",
+  "source": "https://smi-spec.io/",
+  "sections": [
+    {
+      "name": "Traffic Split",
+      "description": "Canary and blue-green deployment configuration dividing traffic between service versions",
+      "fields": [
+        {
+          "name": "service",
+          "type": "string",
+          "required": true,
+          "description": "The apex service name that receives all inbound traffic"
+        },
+        {
+          "name": "backends",
+          "type": "array",
+          "required": true,
+          "description": "Weighted list of backend services. Weights must sum to 100.",
+          "items": {
+            "type": "object",
+            "fields": [
+              {"name": "service", "type": "string", "required": true, "description": "Backend service name"},
+              {"name": "weight", "type": "integer", "minimum": 0, "maximum": 100, "required": true, "description": "Percentage of traffic (0-100)"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Circuit Breaker (Outlier Detection)",
+      "description": "Configuration for ejecting unhealthy endpoints from the load balancing pool",
+      "fields": [
+        {
+          "name": "consecutive5xxErrors",
+          "type": "integer",
+          "description": "Number of consecutive 5xx responses before ejecting an endpoint",
+          "example": 5
+        },
+        {
+          "name": "interval",
+          "type": "string",
+          "format": "duration",
+          "description": "Analysis interval for outlier detection",
+          "example": "10s"
+        },
+        {
+          "name": "baseEjectionTime",
+          "type": "string",
+          "format": "duration",
+          "description": "Minimum ejection duration. Ejected endpoints stay out at least this long.",
+          "example": "30s"
+        },
+        {
+          "name": "maxEjectionPercent",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Maximum percentage of endpoints that can be ejected simultaneously",
+          "example": 50
+        }
+      ]
+    },
+    {
+      "name": "Retry Policy",
+      "description": "Automatic retry configuration for failed requests",
+      "fields": [
+        {
+          "name": "attempts",
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of retry attempts",
+          "example": 3
+        },
+        {
+          "name": "perTryTimeout",
+          "type": "string",
+          "format": "duration",
+          "description": "Timeout per individual retry attempt",
+          "example": "5s"
+        },
+        {
+          "name": "retryOn",
+          "type": "string",
+          "description": "Comma-separated conditions that trigger a retry",
+          "examples": ["5xx", "gateway-error,retriable-4xx", "reset,connect-failure"]
+        }
+      ]
+    },
+    {
+      "name": "Mutual TLS",
+      "description": "Peer authentication and certificate management for service-to-service traffic",
+      "fields": [
+        {
+          "name": "mode",
+          "type": "string",
+          "enum": ["STRICT", "PERMISSIVE", "DISABLE"],
+          "required": true,
+          "description": "STRICT: mutual TLS required. PERMISSIVE: both plaintext and mTLS accepted. DISABLE: no TLS."
+        },
+        {
+          "name": "portLevelMtls",
+          "type": "object",
+          "description": "Port-specific mTLS overrides. Key is port number as string.",
+          "additionalProperties": {
+            "type": "object",
+            "fields": [
+              {"name": "mode", "type": "string", "enum": ["STRICT", "PERMISSIVE", "DISABLE"]}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Authorization Policy",
+      "description": "Fine-grained access control for service-to-service communication",
+      "fields": [
+        {
+          "name": "action",
+          "type": "string",
+          "enum": ["ALLOW", "DENY", "AUDIT"],
+          "description": "Action taken when the policy matches"
+        },
+        {
+          "name": "rules",
+          "type": "array",
+          "description": "Match rules. A request is allowed if it matches any rule.",
+          "items": {
+            "type": "object",
+            "fields": [
+              {
+                "name": "from",
+                "type": "array",
+                "description": "Source principal selectors (namespace, service account, IP)"
+              },
+              {
+                "name": "to",
+                "type": "array",
+                "description": "Target operation selectors (host, method, path, port)"
+              },
+              {
+                "name": "when",
+                "type": "array",
+                "description": "Condition selectors (JWT claims, request headers)"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

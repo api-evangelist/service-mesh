@@ -1,0 +1,30 @@
+{
+  "title": "Canary Deployment Traffic Split (SMI)",
+  "description": "Example of a 90/10 canary traffic split using the SMI TrafficSplit API",
+  "resource": {
+    "apiVersion": "split.smi-spec.io/v1alpha4",
+    "kind": "TrafficSplit",
+    "metadata": {
+      "name": "payment-service-canary",
+      "namespace": "production",
+      "labels": {
+        "app": "payment-service",
+        "deploy-strategy": "canary"
+      }
+    },
+    "spec": {
+      "service": "payment-service",
+      "backends": [
+        {
+          "service": "payment-service-stable",
+          "weight": 90
+        },
+        {
+          "service": "payment-service-canary",
+          "weight": 10
+        }
+      ]
+    }
+  },
+  "notes": "90% of traffic goes to the stable version, 10% to the canary. Adjust weights to progressively roll out."
+}

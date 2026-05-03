@@ -1,0 +1,63 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "schema": "https://schema.org/",
+    "mesh": "https://api-evangelist.github.io/service-mesh/vocab/",
+    "smi": "https://smi-spec.io/vocab/",
+    "k8s": "https://kubernetes.io/docs/reference/kubernetes-api/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+
+    "ServiceMesh": "mesh:ServiceMesh",
+    "VirtualService": "mesh:VirtualService",
+    "DestinationRule": "mesh:DestinationRule",
+    "TrafficSplit": "smi:TrafficSplit",
+    "TrafficPolicy": "mesh:TrafficPolicy",
+    "AuthorizationPolicy": "mesh:AuthorizationPolicy",
+    "PeerAuthentication": "mesh:PeerAuthentication",
+    "Gateway": "mesh:Gateway",
+    "Sidecar": "mesh:Sidecar",
+    "ServiceEntry": "mesh:ServiceEntry",
+    "HTTPRoute": "mesh:HTTPRoute",
+    "HTTPRouteGroup": "smi:HTTPRouteGroup",
+
+    "name": "schema:name",
+    "description": "schema:description",
+    "namespace": "k8s:namespace",
+    "labels": "schema:additionalProperty",
+    "annotations": "schema:additionalProperty",
+
+    "host": "mesh:host",
+    "port": "mesh:port",
+    "weight": "schema:weight",
+    "protocol": "schema:protocol",
+    "timeout": "mesh:timeout",
+    "retries": "mesh:retries",
+    "outlierDetection": "mesh:outlierDetection",
+    "connectionPool": "mesh:connectionPool",
+    "loadBalancer": "mesh:loadBalancer",
+
+    "mode": "mesh:mode",
+    "action": "mesh:action",
+    "source": "schema:source",
+    "destination": "schema:target",
+
+    "mtls": "mesh:mutualTLS",
+    "trafficManagement": "mesh:trafficManagement",
+    "observability": "mesh:observability",
+    "accessControl": "mesh:accessControl",
+
+    "backends": "mesh:backends",
+    "routes": "mesh:routes",
+    "matches": "mesh:matches",
+    "headers": "mesh:headers",
+
+    "created": {
+      "@id": "schema:dateCreated",
+      "@type": "xsd:dateTime"
+    },
+    "modified": {
+      "@id": "schema:dateModified",
+      "@type": "xsd:dateTime"
+    }
+  }
+}

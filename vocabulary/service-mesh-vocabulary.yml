@@ -1,0 +1,357 @@
+name: Service Mesh Vocabulary
+description: >-
+  Domain vocabulary for service mesh architectures. Covers core concepts across
+  major implementations including Istio, Linkerd, Consul Connect, AWS App Mesh,
+  and the Service Mesh Interface (SMI) standard.
+version: "1.0"
+created: '2026-05-02'
+modified: '2026-05-02'
+
+terms:
+  # Core Architecture
+  - term: Service Mesh
+    definition: >-
+      A dedicated infrastructure layer for handling service-to-service
+      communication in a microservices architecture. A service mesh provides
+      traffic management, mutual TLS security, observability (metrics, tracing,
+      logging), and policy enforcement without requiring changes to application
+      code.
+    synonyms:
+      - Mesh
+      - Service Proxy Layer
+    related:
+      - Sidecar Proxy
+      - Control Plane
+      - Data Plane
+
+  - term: Sidecar Proxy
+    definition: >-
+      A proxy container (typically Envoy) deployed alongside each application
+      container in a Kubernetes pod. The sidecar intercepts all inbound and
+      outbound traffic and enforces mesh policies. Sidecar injection is usually
+      automatic via a mutating webhook.
+    synonyms:
+      - Envoy Sidecar
+      - Proxy
+      - Istio Proxy
+    related:
+      - Service Mesh
+      - Data Plane
+
+  - term: Control Plane
+    definition: >-
+      The management component of a service mesh that configures and manages the
+      data plane proxies. The control plane distributes policy, routing rules, and
+      certificates to all sidecar proxies. Examples: istiod (Istio), Linkerd
+      control plane, consul-server.
+    related:
+      - Data Plane
+      - xDS API
+
+  - term: Data Plane
+    definition: >-
+      The network of sidecar proxies (typically Envoy) that handle actual traffic
+      between services. The data plane enforces policies, collects telemetry, and
+      terminates TLS. It receives its configuration from the control plane.
+    related:
+      - Control Plane
+      - Sidecar Proxy
+      - Envoy
+
+  - term: Envoy
+    definition: >-
+      An open-source high-performance proxy developed by Lyft. Envoy is the
+      default sidecar proxy in Istio and many other service meshes. It provides
+      HTTP/2, gRPC, connection pooling, circuit breaking, tracing, and xDS API
+      support.
+    related:
+      - Sidecar Proxy
+      - xDS API
+
+  - term: xDS API
+    definition: >-
+      A family of discovery service APIs (Listener DS, Route DS, Cluster DS,
+      Endpoint DS) used by the control plane to push configuration to Envoy proxies.
+      xDS enables dynamic, hot-reload configuration of proxy behavior without restarts.
+    related:
+      - Control Plane
+      - Envoy
+
+  # Traffic Management
+  - term: VirtualService
+    definition: >-
+      An Istio resource that defines routing rules for how traffic reaching a host
+      is forwarded to backends. Enables fine-grained routing based on URI, headers,
+      weight, and other attributes. The primary tool for canary deployments and
+      A/B testing in Istio.
+    synonyms:
+      - Virtual Service
+    related:
+      - DestinationRule
+      - Traffic Split
+
+  - term: DestinationRule
+    definition: >-
+      An Istio resource that defines policies applied to traffic for a service
+      after routing. Controls connection pool settings, outlier detection (circuit
+      breaking), load balancing algorithm, and mTLS settings per subset.
+    synonyms:
+      - Destination Rule
+    related:
+      - VirtualService
+      - Circuit Breaker
+
+  - term: Traffic Split
+    definition: >-
+      An SMI (Service Mesh Interface) API for splitting traffic across multiple
+      service backends using weighted percentages. Used for canary deployments and
+      blue-green strategies. Weights must sum to 100.
+    synonyms:
+      - Traffic Splitting
+      - Weighted Routing
+    related:
+      - Canary Deployment
+      - Blue-Green Deployment
+      - VirtualService
+
+  - term: Gateway
+    definition: >-
+      A load balancer operating at the edge of the mesh for inbound/outbound
+      traffic. An Istio Gateway describes a load balancer exposing ports, protocols,
+      and TLS settings. Works in conjunction with VirtualService for external traffic
+      routing.
+    related:
+      - VirtualService
+      - Ingress
+
+  # Resilience
+  - term: Circuit Breaker
+    definition: >-
+      A resilience pattern that stops sending traffic to a failing service endpoint
+      after a threshold of errors is reached. In service meshes, circuit breaking is
+      implemented via outlier detection — unhealthy endpoints are ejected from the
+      load balancing pool for a configurable period.
+    synonyms:
+      - Outlier Detection
+      - Ejection
+    related:
+      - Retry Policy
+      - DestinationRule
+
+  - term: Retry Policy
+    definition: >-
+      Configuration that automatically retries failed requests according to defined
+      conditions. Mesh retry policies specify the number of attempts, per-try timeout,
+      and conditions that trigger a retry (5xx, gateway errors, connection failures).
+    related:
+      - Circuit Breaker
+      - Timeout
+
+  - term: Timeout
+    definition: >-
+      A maximum duration for a service request. If the upstream service does not
+      respond within the timeout, the proxy returns a timeout error to the client.
+      Timeouts prevent cascading failures in microservices chains.
+    related:
+      - Retry Policy
+
+  - term: Rate Limiting
+    definition: >-
+      Restricting the number of requests a service can receive per time window.
+      Rate limiting in a service mesh is enforced at the proxy layer without
+      application changes.
+    related:
+      - Circuit Breaker
+
+  # Security
+  - term: Mutual TLS
+    definition: >-
+      A security protocol where both the client and server authenticate each other
+      with X.509 certificates. Service meshes automate mutual TLS between all services
+      using short-lived certificates issued by the mesh certificate authority.
+    synonyms:
+      - mTLS
+      - Two-Way TLS
+    related:
+      - PeerAuthentication
+      - SPIFFE
+      - Zero Trust
+
+  - term: PeerAuthentication
+    definition: >-
+      An Istio resource that configures mutual TLS modes for services in a namespace
+      or across the entire mesh. Modes: STRICT (mTLS required), PERMISSIVE (both
+      plaintext and mTLS accepted), DISABLE (no TLS).
+    synonyms:
+      - Peer Authentication
+    related:
+      - Mutual TLS
+      - AuthorizationPolicy
+
+  - term: AuthorizationPolicy
+    definition: >-
+      An Istio resource that defines fine-grained access control for service-to-service
+      communication. Specifies which source services, namespaces, service accounts,
+      or JWT claims are allowed to call specific methods or paths on a destination.
+    synonyms:
+      - Authorization Policy
+      - Access Policy
+    related:
+      - PeerAuthentication
+      - Zero Trust
+
+  - term: SPIFFE
+    definition: >-
+      Secure Production Identity Framework for Everyone — a set of open standards
+      for cryptographic service identity. Service meshes use SPIFFE SVIDs (X.509
+      certificates with SPIFFE IDs in the SAN) to identify services.
+    related:
+      - Mutual TLS
+      - SPIRE
+
+  - term: Zero Trust
+    definition: >-
+      A security model that requires verification of every request, regardless of
+      network location. Service meshes implement zero trust by enforcing mutual TLS
+      and authorization policies on all service-to-service calls, eliminating
+      implicit trust based on network perimeter.
+    related:
+      - Mutual TLS
+      - AuthorizationPolicy
+
+  # Observability
+  - term: Telemetry
+    definition: >-
+      The collection of metrics, distributed traces, and access logs from service
+      mesh proxies. Service meshes provide telemetry automatically without code
+      changes, covering request volume, error rates, latencies, and topology.
+    synonyms:
+      - Observability Data
+    related:
+      - Distributed Tracing
+      - Service Graph
+
+  - term: Distributed Tracing
+    definition: >-
+      Following a request as it propagates through multiple services. Service meshes
+      integrate with tracing systems (Jaeger, Zipkin, AWS X-Ray) by injecting and
+      propagating trace headers (W3C Trace Context, B3) in the sidecar proxy.
+    synonyms:
+      - Request Tracing
+    related:
+      - Telemetry
+
+  - term: Service Graph
+    definition: >-
+      A topology map showing all services in the mesh and their communication
+      relationships. Service graphs are derived from telemetry data and visualized
+      in tools like Kiali (Istio) or the Linkerd dashboard.
+    synonyms:
+      - Service Topology
+    related:
+      - Telemetry
+
+  # Deployment Patterns
+  - term: Canary Deployment
+    definition: >-
+      A progressive delivery strategy that routes a small percentage of traffic to
+      a new version while the majority continues to the stable version. Canary
+      deployments use TrafficSplit (SMI) or VirtualService weighted routing (Istio)
+      to control the traffic ratio.
+    synonyms:
+      - Canary Release
+    related:
+      - Traffic Split
+      - Blue-Green Deployment
+
+  - term: Blue-Green Deployment
+    definition: >-
+      A deployment strategy using two identical environments (blue = current,
+      green = new). Traffic is switched from blue to green all at once or
+      progressively. Service mesh TrafficSplit enables controlled blue-green
+      migrations.
+    related:
+      - Traffic Split
+      - Canary Deployment
+
+  # Standards and Implementations
+  - term: SMI
+    definition: >-
+      Service Mesh Interface — a CNCF project defining a standard set of CRD APIs
+      for service meshes on Kubernetes. SMI aims to provide a common interface for
+      traffic policy, telemetry, and traffic management across all mesh implementations.
+    related:
+      - TrafficSplit
+      - Istio
+      - Linkerd
+
+  - term: Istio
+    definition: >-
+      An open-source service mesh developed by Google, IBM, and Lyft. Istio is the
+      most widely deployed service mesh, providing comprehensive traffic management,
+      security, and observability using Envoy sidecar proxies and the istiod
+      control plane.
+    related:
+      - Envoy
+      - VirtualService
+      - DestinationRule
+
+  - term: Linkerd
+    definition: >-
+      A lightweight CNCF-graduated service mesh focused on simplicity and security.
+      Linkerd uses a purpose-built micro-proxy (not Envoy) for minimal resource
+      overhead. It was the first service mesh to receive CNCF graduation.
+    related:
+      - Service Mesh
+      - SMI
+
+  - term: Consul Connect
+    definition: >-
+      HashiCorp Consul's service mesh capability providing service discovery, mTLS,
+      and intentions-based access control. Consul Connect supports non-Kubernetes
+      workloads and multi-datacenter deployments.
+    related:
+      - Service Mesh
+
+categories:
+  - name: Architecture
+    terms:
+      - Service Mesh
+      - Sidecar Proxy
+      - Control Plane
+      - Data Plane
+      - Envoy
+  - name: Traffic Management
+    terms:
+      - VirtualService
+      - DestinationRule
+      - Traffic Split
+      - Gateway
+      - Rate Limiting
+  - name: Resilience
+    terms:
+      - Circuit Breaker
+      - Retry Policy
+      - Timeout
+  - name: Security
+    terms:
+      - Mutual TLS
+      - PeerAuthentication
+      - AuthorizationPolicy
+      - SPIFFE
+      - Zero Trust
+  - name: Observability
+    terms:
+      - Telemetry
+      - Distributed Tracing
+      - Service Graph
+  - name: Deployment Patterns
+    terms:
+      - Canary Deployment
+      - Blue-Green Deployment
+  - name: Implementations and Standards
+    terms:
+      - SMI
+      - Istio
+      - Linkerd
+      - Consul Connect

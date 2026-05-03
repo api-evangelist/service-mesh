@@ -1,0 +1,18 @@
+{
+  "title": "Strict Mutual TLS PeerAuthentication (Istio)",
+  "description": "Enable strict mTLS for all services in the production namespace using Istio PeerAuthentication",
+  "resource": {
+    "apiVersion": "security.istio.io/v1beta1",
+    "kind": "PeerAuthentication",
+    "metadata": {
+      "name": "default",
+      "namespace": "production"
+    },
+    "spec": {
+      "mtls": {
+        "mode": "STRICT"
+      }
+    }
+  },
+  "notes": "Applying to the 'production' namespace enforces mTLS for all services within it. Set mode to PERMISSIVE during migration to allow both plaintext and TLS traffic."
+}
