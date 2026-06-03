@@ -1,0 +1,23 @@
+meta:
+  name: Service Mesh
+  description: Service mesh is a dedicated infrastructure layer for handling service-to-service
+    communication in microservices architectures. It provides traffic management,
+    mutual TLS security, observability, policy enforcement, and resilience features
+    without requiring changes to application code. Key implementations include Istio,
+    Linkerd, Consul Connect, and AWS App Mesh. This index tracks service mesh specifications,
+    implementations, and related APIs across the ecosystem.
+  tags:
+  - Service Mesh
+  - Microservices
+  - Cloud Native
+  - Kubernetes
+  - Networking
+  - Observability
+  - Zero Trust
+  portal: null
+  github: null
+  repo: service-mesh
+services_tools: []
+features: []
+use_cases: []
+integrations: []
