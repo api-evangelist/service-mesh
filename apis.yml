@@ -12,6 +12,14 @@ image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.j
 tags:
   - Service Mesh
   - Microservices
+  - Cloud-Native
+  - Kubernetes
+  - Networking
+  - Observability
+  - Zero Trust
+tags_raw:
+  - Service Mesh
+  - Microservices
   - Cloud Native
   - Kubernetes
   - Networking
@@ -111,6 +119,12 @@ apis:
       hosted by the CNCF.
     humanURL: https://smi-spec.io/
     tags:
+      - Service Mesh
+      - SMI
+      - Standards
+      - Kubernetes
+      - CNCF
+    tags_raw:
       - Service Mesh
       - SMI
       - Standard
