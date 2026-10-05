@@ -1,5 +1,6 @@
 aid: service-mesh
 name: Service Mesh
+kind: topic
 description: >-
   Service mesh is a dedicated infrastructure layer for handling service-to-service
   communication in microservices architectures. It provides traffic management,
