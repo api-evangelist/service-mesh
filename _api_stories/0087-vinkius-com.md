@@ -1,6 +1,6 @@
 ---
-title: Real-Time OFAC Sanctions Service Monitoring with MCP Server
-link: https://vinkius.com/automating-ofac-sanctions-checks-with-mcp-server/
+title: Managing CoreMedia Content Cloud with AI Agents via MCP
+link: https://vinkius.com/managing-coremedia-content-cloud-with-ai-agents-via-mcp/
 published: '2026-07-09'
 provider: vinkius-com
 repo: https://github.com/api-evangelist/vinkius-com

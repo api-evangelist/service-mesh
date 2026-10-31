@@ -1,8 +1,8 @@
 ---
-title: How Cloudflare detects MCP traffic and helps secure it
-link: https://blog.cloudflare.com/mcp-security-updates/
-published: '2026-08-14'
+title: Gateway, Cloudflare One - MCP protocol detection and AI Security dashboard
+link: https://developers.cloudflare.com/changelog/post/2026-08-12-mcp-detection-and-dashboard/
+published: '2026-08-12'
 provider: cloudflare
 repo: https://github.com/api-evangelist/cloudflare
-domain: blog.cloudflare.com
+domain: developers.cloudflare.com
 ---
